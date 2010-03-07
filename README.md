@@ -14,10 +14,10 @@ Installation
 ------------
 
 1. Download and extract the "shiki" folder to your extensions directory. This is usually "/protected/extensions".
-2. Download the FirePHP core class and put it somewhere in your "/protected" directory. I usually put these files in /protected/vendors. 
+2. Download the FirePHP core class and put it somewhere in your "/protected" directory. I usually put these files in /protected/vendors.
 3. Modify your config file to include this LogRoute class and set the "fbPath" property to the path of fb.php. Use a Yii alias (i.e. application.vendors.FirePHPCore031.lib.FirePHPCore.fb):
 
-    // config file code (i.e. /protected/config/main.php)
+##### config file code (i.e. /protected/config/main.php)    
     ....
 
     'log'=>array(
