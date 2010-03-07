@@ -1,4 +1,5 @@
 FirePHP LogRoute extension for Yii Framework
+--------------------------------------------
 
 This extension sends Yii log messages to FirePHP. It inherits from CLogRoute and uses the same method and configuration as the other built-in logging components: CFileLogRoute, CWebLogRoute, etc.
 
