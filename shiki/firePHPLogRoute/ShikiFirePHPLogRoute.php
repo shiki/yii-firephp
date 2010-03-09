@@ -75,15 +75,32 @@ class ShikiFirePHPLogRoute extends CLogRoute
     public $labelFormat = '#{category}';
 
     /**
+     * FirePHP options. Available keys are:
+     *  - maxObjectDepth: The maximum depth to traverse objects (default: 10)
+     *  - maxArrayDepth: The maximum depth to traverse arrays (default: 20)
+     *  - useNativeJsonEncode: If true will use json_encode() (default: true)
+     *  - includeLineNumbers: If true will include line numbers and filenames (default: false)
+     * @var array
+     */
+    public $options = array(
+        'maxObjectDepth' => 2,
+        'maxArrayDepth' => 5,
+        'includeLineNumbers' => false,
+    );
+
+    /**
      * Load fb.php. This is called only when processLogs() is called
      *
      */
     protected function includeLib()
     {
-        if (!isset($this->fbPath))
+        if (!isset($this->fbPath)) {
             throw new Exception('Please set a path alias to the FirePHP lib path.');
-        else
+        } else {
             Yii::import($this->fbPath, true);
+            
+            FB::setOptions($this->options);
+        }
     }
 
     /**
@@ -101,7 +118,7 @@ class ShikiFirePHPLogRoute extends CLogRoute
         $this->includeLib();
 
         foreach ($logs as $log) {
-            $method = 'trace';
+            $method = 'info';
             switch ($log[1]) {
                 case CLogger::LEVEL_INFO:
                     $method = 'info';
