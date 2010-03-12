@@ -98,7 +98,7 @@ class ShikiFirePHPLogRoute extends CLogRoute
             throw new Exception('Please set a path alias to the FirePHP lib path.');
         } else {
             Yii::import($this->fbPath, true);
-            
+
             FB::setOptions($this->options);
         }
     }
@@ -115,9 +115,16 @@ class ShikiFirePHPLogRoute extends CLogRoute
 	 */
     protected function processLogs($logs)
     {
+		// http://github.com/shiki/yii-firephplogroute/issues#issue/1
+		// This gets thrown "Fatal error: Exception thrown without a stack frame in Unknown on line 0" if
+		// FirePHP tries to throw an exception when we are already under an exception handler and headers were already sent.
+		if (Yii::app()->getErrorHandler()->getError() && headers_sent())
+			return;
+
         $this->includeLib();
 
         foreach ($logs as $log) {
+
             $method = 'info';
             switch ($log[1]) {
                 case CLogger::LEVEL_INFO:
