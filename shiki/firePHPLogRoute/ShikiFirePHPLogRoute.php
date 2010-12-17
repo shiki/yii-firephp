@@ -52,104 +52,107 @@
  */
 class ShikiFirePHPLogRoute extends CLogRoute
 {
-    /**
-     * The path alias to FirePHP core lib's fb.php
-     * @var string
-     */
-    public $fbPath;
-    /**
-     * Output format for trace messages. Allowed placeholders are:
-     *     #{category}
-     *     #{message}
-     *     #{timestamp}
-     * @var string
-     */
-    public $traceFormat = '#{category}: #{message}';
-    /**
-     * Output format for log labels. This is applicable to log messages other
-     * than "trace". Allowed placeholders are:
-     *     #{category}
-     *     #{timestamp}
-     * @var string
-     */
-    public $labelFormat = '#{category}';
+  /**
+   * Path to the directory containing the fb.php and FirePHP.class.php files. This cannot
+   * be a Yii alias.
+   * @var string
+   */
+  public $libPath;
 
-    /**
-     * FirePHP options. Available keys are:
-     *  - maxObjectDepth: The maximum depth to traverse objects (default: 10)
-     *  - maxArrayDepth: The maximum depth to traverse arrays (default: 20)
-     *  - useNativeJsonEncode: If true will use json_encode() (default: true)
-     *  - includeLineNumbers: If true will include line numbers and filenames (default: false)
-     * @var array
-     */
-    public $options = array(
-        'maxObjectDepth' => 2,
-        'maxArrayDepth' => 5,
-        'includeLineNumbers' => false,
-    );
+  /**
+   * Output format for trace messages. Allowed placeholders are:
+   *     #{category}
+   *     #{message}
+   *     #{timestamp}
+   * @var string
+   */
+  public $traceFormat = '#{category}: #{message}';
 
-    /**
-     * Load fb.php. This is called only when processLogs() is called
-     *
-     */
-    protected function includeLib()
-    {
-        if (!isset($this->fbPath)) {
-            throw new Exception('Please set a path alias to the FirePHP lib path.');
-        } else {
-            Yii::import($this->fbPath, true);
+  /**
+   * Output format for log labels. This is applicable to log messages other
+   * than "trace". Allowed placeholders are:
+   *     #{category}
+   *     #{timestamp}
+   * @var string
+   */
+  public $labelFormat = '#{category}';
 
-            FB::setOptions($this->options);
-        }
+  /**
+   * FirePHP options. Available keys are:
+   *  - maxObjectDepth: The maximum depth to traverse objects (default: 10)
+   *  - maxArrayDepth: The maximum depth to traverse arrays (default: 20)
+   *  - useNativeJsonEncode: If true will use json_encode() (default: true)
+   *  - includeLineNumbers: If true will include line numbers and filenames (default: false)
+   * @var array
+   */
+  public $options = array(
+    'maxObjectDepth'     => 2,
+    'maxArrayDepth'      => 5,
+    'includeLineNumbers' => false,
+  );
+
+  /**
+   * Load fb.php. This is called only when processLogs() is called
+   */
+  protected function includeLib()
+  {
+    if ((!class_exists('FirePHP', false) || !class_exists('FB', false)) && empty($this->libPath))
+      throw new CException('Could not find FirePHP classes. libPath is required.');
+
+    if (!class_exists('FirePHP', false))
+      require_once($this->libPath . '/FirePHP.class.php');
+    if (!class_exists('FB', false))
+      require_once($this->libPath . '/fb.php');
+
+    FB::setOptions($this->options);
+  }
+
+  /**
+   * Processes log messages and sends them to specific destination.	 *
+   * @param array list of messages.  Each array elements represents one message
+   * with the following structure:
+   * array(
+   *   [0] => message (string)
+   *   [1] => level (string)
+   *   [2] => category (string)
+   *   [3] => timestamp (float, obtained by microtime(true));
+   */
+  protected function processLogs($logs)
+  {
+    // http://github.com/shiki/yii-firephplogroute/issues#issue/1
+    // This gets thrown "Fatal error: Exception thrown without a stack frame in Unknown on line 0" if
+    // FirePHP tries to throw an exception when we are already under an exception handler and headers were already sent.
+    if (Yii::app()->getErrorHandler()->getError() && headers_sent())
+      return;
+
+    $this->includeLib();
+
+    foreach ($logs as $log) {
+      $method = 'info';
+      switch ($log[1]) {
+        case CLogger::LEVEL_INFO:
+          $method = 'info';
+          break;
+        case CLogger::LEVEL_ERROR:
+          $method = 'error';
+          break;
+        case CLogger::LEVEL_WARNING:
+          $method = 'warn';
+          break;
+      }
+
+      if ($method == 'trace') {
+        // FirePHP's trace method do not include labels
+        $trace = str_replace(array('#{category}', '#{timestamp}', '#{message}'),
+                   array($log[2], date(DateTime::W3C, $log[3]), $log[0]),
+                   $this->traceFormat);
+        FB::$method($trace);
+      } else {
+        $category = str_replace(array('#{category}', '#{timestamp}'),
+                      array($log[2], date(DateTime::W3C, $log[3])),
+                      $this->labelFormat);
+        FB::$method($log[0], $category);
+      }
     }
-
-    /**
-	 * Processes log messages and sends them to specific destination.	 *
-	 * @param array list of messages.  Each array elements represents one message
-	 * with the following structure:
-	 * array(
-	 *   [0] => message (string)
-	 *   [1] => level (string)
-	 *   [2] => category (string)
-	 *   [3] => timestamp (float, obtained by microtime(true));
-	 */
-    protected function processLogs($logs)
-    {
-		// http://github.com/shiki/yii-firephplogroute/issues#issue/1
-		// This gets thrown "Fatal error: Exception thrown without a stack frame in Unknown on line 0" if
-		// FirePHP tries to throw an exception when we are already under an exception handler and headers were already sent.
-		if (Yii::app()->getErrorHandler()->getError() && headers_sent())
-			return;
-
-        $this->includeLib();
-
-        foreach ($logs as $log) {
-
-            $method = 'info';
-            switch ($log[1]) {
-                case CLogger::LEVEL_INFO:
-                    $method = 'info';
-                    break;
-                case CLogger::LEVEL_ERROR:
-                    $method = 'error';
-                    break;
-                case CLogger::LEVEL_WARNING:
-                    $method = 'warn';
-                    break;
-            }
-
-            if ($method == 'trace') {
-                // FirePHP's trace method do not include labels
-                $trace = str_replace(array('#{category}', '#{timestamp}', '#{message}'),
-                        array($log[2], date(DateTime::W3C, $log[3]), $log[0]),
-                        $this->traceFormat);
-                FB::$method($trace);
-            } else {
-                $category = str_replace(array('#{category}', '#{timestamp}'),
-                        array($log[2], date(DateTime::W3C, $log[3])),
-                        $this->labelFormat);
-                FB::$method($log[0], $category);
-            }
-        }
-    }
+  }
 }
