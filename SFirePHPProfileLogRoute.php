@@ -88,6 +88,8 @@ class SFirePHPProfileLogRoute extends CProfileLogRoute
    */
   private function renderSummary($data)
   {
+    $this->renderSQLStats();
+    
     $table = array(array('Procedure', 'Count', 'Total (s)', 'Avg. (s)', 'Min. (s)', 'Max. (s)'));
     foreach ($data as $entry) {      
       $table[] = array(
@@ -105,7 +107,7 @@ class SFirePHPProfileLogRoute extends CProfileLogRoute
                 . 'Memory: ' . number_format(Yii::getLogger()->getMemoryUsage() / 1024) . 'KB'
                 . ')';
     
-    FB::table($tableLabel, $table);
+    FB::table($tableLabel, $table);       
   }
   
   /**
@@ -114,6 +116,8 @@ class SFirePHPProfileLogRoute extends CProfileLogRoute
    */
   private function renderCallstack($data)
   {
+    $this->renderSQLStats();
+    
     $table = array(array('Procedure', 'Time (s)'));
     foreach ($data as $entry) {
       $spaces = str_repeat('> ', $entry[2]);
@@ -123,6 +127,18 @@ class SFirePHPProfileLogRoute extends CProfileLogRoute
       );
     }
     
-    FB::table('Profiling Callstack Report', $table);
+    FB::table('Profiling Callstack Report', $table);    
+  }
+  
+  /**
+   * 
+   */
+  private function renderSQLStats()
+  {
+    $stats = Yii::app()->getDb()->getStats();
+    FB::group('SQL Stats');
+    FB::log($stats[0], 'total executed');
+    FB::log($stats[1], 'total time spent');
+    FB::groupEnd();
   }
 }

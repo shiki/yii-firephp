@@ -10,6 +10,9 @@ to [CWebLogRoute](http://www.yiiframework.com/doc/api/1.1/CWebLogRoute)
 and [CProfileLogRoute](http://www.yiiframework.com/doc/api/1.1/CProfileLogRoute). 
 The only major difference is the target output.
 
+An advantage of using this extension is that logging and profiling work even through AJAX
+requests. Logging of arrays is also possible.
+
 This extension currently supports FirePHPCore 0.3.2. Support for FirePHP 1.0 is planned.
 
 Requirements
@@ -92,7 +95,7 @@ Profiling works by simply using Yii's profiling methods.
 
     Yii::endProfile('a somewhat slow method'); // end
 
-You can also profile SQL executions. See more about that 
+You can also profile SQL executions. See more about that and profiling in general
 [here](http://www.yiiframework.com/doc/guide/1.1/en/topics.logging#performance-profiling).
 
 -end-
