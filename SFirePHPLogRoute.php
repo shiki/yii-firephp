@@ -1,10 +1,10 @@
 <?php
 
 /**
- * The FirePHP LogRoute extension for Yii Framework is free software. It is released under the terms of
+ * The FirePHP extension for Yii Framework is free software. It is released under the terms of
  * the following BSD License.
  *
- * Copyright (c) 2010, BJ Basañes (shikishiji@gmail.com).
+ * Copyright (c) 2010-2011, BJ Basañes (shikishiji@gmail.com).
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
@@ -31,9 +31,9 @@
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of <copyright holder>.
  *
- * @copyright Copyright (c) BJ Basañes
- * @author BJ Basañes <shikishiji@gmail.com>
  */
+
+require_once(dirname(__FILE__) . '/SFirePHPUtil.php');
 
 /**
  * Sends Yii log messages to FirePHP. Since this class inherits from CLogRoute,
@@ -41,7 +41,7 @@
  * logging components: CFileLogRoute, CWebLogRoute, etc.
  *
  * @author BJ Basañes <shikishiji@gmail.com>
- * @version 0.2
+ * @version 0.3
  */
 class SFirePHPLogRoute extends CLogRoute
 {
@@ -85,22 +85,6 @@ class SFirePHPLogRoute extends CLogRoute
   );
 
   /**
-   * Load fb.php. This is called only when processLogs() is called
-   */
-  protected function includeLib()
-  {
-    if ((!class_exists('FirePHP', false) || !class_exists('FB', false)) && empty($this->libPath))
-      $this->libPath = dirname(__FILE__) . '/firephp/lib/FirePHPCore';
-    
-    if (!class_exists('FirePHP', false))
-      require_once($this->libPath . '/FirePHP.class.php');
-    if (!class_exists('FB', false))
-      require_once($this->libPath . '/fb.php');
-      
-    FB::setOptions($this->options);
-  }
-
-  /**
    * Processes log messages and sends them to specific destination.	 *
    * @param array list of messages.  Each array elements represents one message
    * with the following structure:
@@ -112,13 +96,10 @@ class SFirePHPLogRoute extends CLogRoute
    */
   protected function processLogs($logs)
   {
-    // http://github.com/shiki/yii-firephplogroute/issues#issue/1
-    // This gets thrown "Fatal error: Exception thrown without a stack frame in Unknown on line 0" if
-    // FirePHP tries to throw an exception when we are already under an exception handler and headers were already sent.
-    if (Yii::app()->getErrorHandler()->getError() && headers_sent())
+    if (!SFirePHPUtil::isSafeToUseFirePHP())
       return;
-
-    $this->includeLib();
+    
+    SFirePHPUtil::loadFirePHP($this->libPath, $this->options);
 
     foreach ($logs as $log) {
       $method = 'info';

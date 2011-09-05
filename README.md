@@ -1,8 +1,14 @@
-FirePHP LogRoute extension for Yii Framework
+FirePHP extension for Yii Framework
 ============================================
 
-This extension sends Yii log messages to FirePHP. It inherits from CLogRoute and uses the same method 
-and configuration as the other built-in logging components: CFileLogRoute, CWebLogRoute, etc.
+This extension contains 2 log route classes. The first, 
+[SFirePHPLogRoute](https://github.com/shiki/yii-firephp/blob/master/SFirePHPLogRoute.php) processes 
+standard Yii log messages. The second, 
+[SFirePHPProfileLogRoute](https://github.com/shiki/yii-firephp/blob/master/SFirePHPProfileLogRoute.php) 
+processes profile summaries. Both classes send all output to FirePHP. The classes work similarly 
+to [CWebLogRoute](http://www.yiiframework.com/doc/api/1.1/CWebLogRoute) 
+and [CProfileLogRoute](http://www.yiiframework.com/doc/api/1.1/CProfileLogRoute). 
+The only major difference is the target output.
 
 This extension currently supports FirePHPCore 0.3.2. Support for FirePHP 1.0 is planned.
 
@@ -18,29 +24,35 @@ Installation
 
 1. Download and extract the contents to a folder under your extensions directory. 
    This can be "/protected/extensions/firephp".
-2. Modify your config file to include this LogRoute class.
+2. Modify your config file to include the log route classes.
 
 ##### config file code (i.e. /protected/config/main.php)    
     ....
 
-    'log'=>array(
-        'class'=>'CLogRouter',
-        'routes'=>array(
+    'log' => array(
+        'class' => 'CLogRouter',
+        'routes' => array(
             // the default (file logger)
             array(
-                'class'=>'CFileLogRoute',
-                'levels'=>'error, warning',
+                'class' => 'CFileLogRoute',
+                'levels' => 'error, warning',
             ),
-            // the FirePHP LogRoute
+            // standard log route
             array(
                 'class' => 'ext.firephp.SFirePHPLogRoute', 
+                'levels' => 'error, warning, info, trace',
+            ),
+            // profile log route
+            array(
+                'class' => 'ext.firephp.SFirePHPProfileLogRoute',
+                'report' => 'summary' // or "callstack"
             ),
         ),
     ),
 
     ....
 
-Usage
+Standard logging
 -----
 
 Once you've got the extension setup in the config, you can use Yii's logging methods to log messages to FirePHP.
@@ -60,5 +72,27 @@ Once you've got the extension setup in the config, you can use Yii's logging met
     // logging an ERROR
     Yii::log('We have successfully determined that you are not a person', CLogger::LEVEL_ERROR, 'Any category/label will work');
 
+See more about logging [here](http://www.yiiframework.com/doc/guide/1.1/en/topics.logging).
+
+
+Profiling
+-----
+
+Profiling works by simply using Yii's profiling methods.
+
+    Yii::beginProfile('a somewhat slow method');
+
+    ...
+    // some function calls here
+    // more function calls 
+
+    Yii::beginProfile('nested profile');
+    // you can also nest profile calls
+    Yii::endProfile('nested profile');
+
+    Yii::endProfile('a somewhat slow method'); // end
+
+You can also profile SQL executions. See more about that 
+[here](http://www.yiiframework.com/doc/guide/1.1/en/topics.logging#performance-profiling).
 
 -end-
