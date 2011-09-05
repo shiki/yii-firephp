@@ -1,22 +1,24 @@
 FirePHP LogRoute extension for Yii Framework
 ============================================
 
-This extension sends Yii log messages to FirePHP. It inherits from CLogRoute and uses the same method and configuration as the other built-in logging components: CFileLogRoute, CWebLogRoute, etc.
+This extension sends Yii log messages to FirePHP. It inherits from CLogRoute and uses the same method 
+and configuration as the other built-in logging components: CFileLogRoute, CWebLogRoute, etc.
+
+This extension currently supports FirePHPCore 0.3.2. Support for FirePHP 1.0 is planned.
 
 Requirements
 ------------
 
 * A Yii Framework project
-* Install Firebug and FirePHP plugins for Firefox. See http://firephp.org
+* Install Firebug and FirePHP plugins for Firefox. See http://firephp.org. 
 * Set output_buffering setting to true in php.ini. 
 
 Installation
 ------------
 
-1. Download and extract the "shiki" folder to your extensions directory. This is usually "/protected/extensions".
-2. Download the FirePHP core class and put it somewhere in your "/protected" directory. I usually put these files in /protected/vendors.
-3. Modify your config file to include this LogRoute class and set the "libPath" property to the directory containing the FirePHP.class.php and fb.php files.
-This cannot be a Yii alias.:
+1. Download and extract the contents to a folder under your extensions directory. 
+   This can be "/protected/extensions/firephp".
+2. Modify your config file to include this LogRoute class.
 
 ##### config file code (i.e. /protected/config/main.php)    
     ....
@@ -31,8 +33,7 @@ This cannot be a Yii alias.:
             ),
             // the FirePHP LogRoute
             array(
-                'class' => 'ext.shiki.firePHPLogRoute.ShikiFirePHPLogRoute', // "ext" alias points to /protected/extensions   
-                'libPath' => dirname(__FILE__) . '/path/to/firephp/lib',
+                'class' => 'ext.firephp.SFirePHPLogRoute', 
             ),
         ),
     ),

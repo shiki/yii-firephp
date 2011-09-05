@@ -1,3 +1,5 @@
 
 /test-app/*
 /nbproject/*
+
+.DS_Store

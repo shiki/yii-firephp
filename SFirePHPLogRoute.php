@@ -33,8 +33,6 @@
  *
  * @copyright Copyright (c) BJ Basañes
  * @author BJ Basañes <shikishiji@gmail.com>
- * @package Shiki
- * @subpackage FirePHPLogRoute
  */
 
 /**
@@ -42,15 +40,10 @@
  * it uses the same method and configuration as the other built-in
  * logging components: CFileLogRoute, CWebLogRoute, etc.
  *
- * @todo additional properties as wrappers for FirePHP's options
- * @todo maybe an access to it's instance? And allowing immediate logging as opposed to delayed logging by Yii
- *
  * @author BJ Basañes <shikishiji@gmail.com>
- * @package Shiki
- * @subpackage FirePHPLogRoute
- * @version 0.1
+ * @version 0.2
  */
-class ShikiFirePHPLogRoute extends CLogRoute
+class SFirePHPLogRoute extends CLogRoute
 {
   /**
    * Path to the directory containing the fb.php and FirePHP.class.php files. This cannot
@@ -97,13 +90,13 @@ class ShikiFirePHPLogRoute extends CLogRoute
   protected function includeLib()
   {
     if ((!class_exists('FirePHP', false) || !class_exists('FB', false)) && empty($this->libPath))
-      throw new CException('Could not find FirePHP classes. libPath is required.');
-
+      $this->libPath = dirname(__FILE__) . '/firephp/lib/FirePHPCore';
+    
     if (!class_exists('FirePHP', false))
       require_once($this->libPath . '/FirePHP.class.php');
     if (!class_exists('FB', false))
       require_once($this->libPath . '/fb.php');
-
+      
     FB::setOptions($this->options);
   }
 
