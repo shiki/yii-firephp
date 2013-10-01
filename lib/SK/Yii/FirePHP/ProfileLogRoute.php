@@ -1,5 +1,7 @@
 <?php
 
+namespace SK\Yii\FirePHP;
+
 /**
  * Sends profiling results to FirePHP instead of the page view. This works
  * just like CProfileLogRoute. The only difference is the target output.
@@ -63,7 +65,8 @@ class ProfileLogRoute extends \CProfileLogRoute
       . 'Memory: ' . number_format(\Yii::getLogger()->getMemoryUsage() / 1024) . 'KB'
       . ')';
 
-    \FB::table($tableLabel, $table);
+    $firephp = \FirePHP::getInstance(true);
+    $firephp->table($tableLabel, $table);
   }
 
   /**
@@ -83,7 +86,8 @@ class ProfileLogRoute extends \CProfileLogRoute
       );
     }
 
-    \FB::table('Profiling Callstack Report', $table);
+    $firephp = \FirePHP::getInstance(true);
+    $firephp->table('Profiling Callstack Report', $table);
   }
 
   /**
@@ -92,10 +96,18 @@ class ProfileLogRoute extends \CProfileLogRoute
   private function renderSQLStats()
   {
     $stats = \Yii::app()->getDb()->getStats();
-    \FB::group('SQL Stats');
-    \FB::log($stats[0], 'total executed');
-    \FB::log($stats[1], 'total time spent');
-    \FB::groupEnd();
+
+    // Using a table because groups are broken as of FirePHP 0.7.4 and FireBug 1.12.2
+    // https://github.com/firephp/firephp-extension/issues/13
+    $tableData = array(
+      array('what', 'stats'),
+      array('total executed', $stats[0]),
+      array('total time spent', $stats[1]),
+    );
+    $tableLabel = "SQL Stats (Executed: $stats[0], Time: $stats[1])";
+
+    $firephp = \FirePHP::getInstance(true);
+    $firephp->table($tableLabel, $tableData);
   }
 }
 
