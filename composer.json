@@ -1,0 +1,13 @@
+{
+  "name": "shiki/yii-firephp",
+  "type": "library",
+  "description": "FirePHP extension for Yii Framework.",
+  "keywords": ["firephp", "firebug", "yii"],
+  "homepage": "https://github.com/shiki/yii-firephp",
+  "license": "MIT",
+  "autoload": {
+    "psr-0": {
+      "SK\\Yii\\FirePHP\\": "lib"
+    }
+  }
+}
