@@ -5,6 +5,9 @@
   "keywords": ["firephp", "firebug", "yii"],
   "homepage": "https://github.com/shiki/yii-firephp",
   "license": "MIT",
+  "require": {
+    "firephp/firephp-core": ">=0.4.0"
+  },
   "autoload": {
     "psr-0": {
       "SK": "lib"
