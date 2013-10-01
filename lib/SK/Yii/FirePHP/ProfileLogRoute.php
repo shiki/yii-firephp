@@ -10,20 +10,20 @@
 class ProfileLogRoute extends \CProfileLogRoute
 {
   /**
-	 * Displays the log messages. Overridden to remove the check for isAjaxRequest.
-	 * @param array $logs list of log messages
-	 */
-	public function processLogs($logs)
-	{
-		$app = \Yii::app();
-		if(!($app instanceof \CWebApplication) || !Util::isSafeToUseFirePHP())
+   * Displays the log messages. Overridden to remove the check for isAjaxRequest.
+   * @param array $logs list of log messages
+   */
+  public function processLogs($logs)
+  {
+    $app = \Yii::app();
+    if (!($app instanceof \CWebApplication) || !Util::isSafeToUseFirePHP())
       return;
 
-		if ($this->getReport() === 'summary')
+    if ($this->getReport() === 'summary')
       $this->displaySummary($logs);
-		else
+    else
       $this->displayCallstack($logs);
-	}
+  }
 
   /**
    * Directs output to FirePHP instead of the page view.
