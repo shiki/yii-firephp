@@ -95,7 +95,12 @@ class ProfileLogRoute extends \CProfileLogRoute
    */
   private function renderSQLStats()
   {
-    $stats = \Yii::app()->getDb()->getStats();
+    try {
+      $stats = \Yii::app()->getDb()->getStats();
+    } catch (\CDbException $e) {
+      // Silently abort if we could not connect to the db.
+      return;
+    }
 
     // Using a table because groups are broken as of FirePHP 0.7.4 and FireBug 1.12.2
     // https://github.com/firephp/firephp-extension/issues/13
@@ -110,4 +115,5 @@ class ProfileLogRoute extends \CProfileLogRoute
     $firephp->table($tableLabel, $tableData);
   }
 }
+
 

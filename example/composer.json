@@ -1,0 +1,9 @@
+{
+  "repositories": [
+    { "type": "vcs", "url": "https://github.com/shiki/yii-firephp.git" }
+  ],
+  "require": {
+    "yiisoft/yii": ">= 1.1.14",
+    "shiki/yii-firephp": "dev-master"
+  }
+}
