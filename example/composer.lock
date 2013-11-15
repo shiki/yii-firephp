@@ -47,12 +47,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/shiki/yii-firephp.git",
-                "reference": "e3fde4074a7db69cfe9ffff49bd9390019eb1855"
+                "reference": "4fac0d4ca344c10341a7ead981541ada804532c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shiki/yii-firephp/zipball/e3fde4074a7db69cfe9ffff49bd9390019eb1855",
-                "reference": "e3fde4074a7db69cfe9ffff49bd9390019eb1855",
+                "url": "https://api.github.com/repos/shiki/yii-firephp/zipball/4fac0d4ca344c10341a7ead981541ada804532c2",
+                "reference": "4fac0d4ca344c10341a7ead981541ada804532c2",
                 "shasum": ""
             },
             "require": {
@@ -78,7 +78,7 @@
                 "source": "https://github.com/shiki/yii-firephp/tree/master",
                 "issues": "https://github.com/shiki/yii-firephp/issues"
             },
-            "time": "2013-10-01 10:28:50"
+            "time": "2013-11-15 02:50:32"
         },
         {
             "name": "yiisoft/yii",
