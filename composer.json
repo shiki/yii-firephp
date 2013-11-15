@@ -2,10 +2,14 @@
   "name": "shiki/yii-firephp",
   "type": "library",
   "description": "FirePHP extension for Yii Framework.",
-  "keywords": ["firephp", "firebug", "yii"],
+  "keywords": ["firephp", "firebug", "yii", "logging", "log", "profiling", "profile"],
   "homepage": "https://github.com/shiki/yii-firephp",
+  "authors": [
+    { "name": "BJ Basañes", "email": "bj@basanes.net", "homepage": "http://shiki.me" }
+  ],
   "license": "MIT",
   "require": {
+    "php": ">=5.3.0",
     "firephp/firephp-core": ">=0.4.0"
   },
   "autoload": {
