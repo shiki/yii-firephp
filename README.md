@@ -13,8 +13,8 @@ An advantage of using this extension is that logging and profiling work even thr
 
 ## Requirements
 
-* PHP 5.4+
-* A Yii Framework `1.1.14+` project.
+* PHP _5.4+_
+* A Yii Framework _1.1.14+_ project.
 * Firebug and FirePHP plugins for Firefox. See http://firephp.org. Firebug's _Console_ and
   _Net_ tabs have to be enabled for this to work.
 * Set `output_buffering` setting to true in `php.ini`. You might also want to increase the buffer
@@ -26,14 +26,16 @@ The only supported installation method for now is using [Composer](http://getcom
 
 1. Put this in your `composer.json` and run `composer update` to install it:
 
-        {
-          "repositories": [
-            { "type": "vcs", "url": "https://github.com/shiki/yii-firephp.git" }
-          ],
-          "require": {
-            "shiki/yii-firephp": "dev-master"
-          }
-        }
+  ```json
+  {
+    "repositories": [
+      { "type": "vcs", "url": "https://github.com/shiki/yii-firephp.git" }
+    ],
+    "require": {
+      "shiki/yii-firephp": "dev-master"
+    }
+  }
+  ```
 
 
   This will also automatically install the dependency `firephp/firephp-core`.
@@ -44,53 +46,57 @@ The only supported installation method for now is using [Composer](http://getcom
 
 3. Modify your config file (e.g. `protected/config/main.php`) to include the log route classes.
 
-        ....
+  ```php
+  ....
 
-        'log' => array(
-          'class' => 'CLogRouter',
-          'routes' => array(
-            // the default (file logger)
-            array(
-              'class' => 'CFileLogRoute',
-              'levels' => 'error, warning',
-            ),
-            // standard log route
-            array(
-              'class' => '\\SK\\Yii\\FirePHP\\LogRoute',
-              'levels' => 'error, warning, info, trace',
-            ),
-            // profile log route
-            array(
-              'class' => '\\SK\\Yii\\FirePHP\\ProfileLogRoute',
-              'report' => 'summary', // or "callstack"
-            ),
-          ),
-        ),
+  'log' => array(
+    'class' => 'CLogRouter',
+    'routes' => array(
+      // the default (file logger)
+      array(
+        'class' => 'CFileLogRoute',
+        'levels' => 'error, warning',
+      ),
+      // standard log route
+      array(
+        'class' => '\\SK\\Yii\\FirePHP\\LogRoute',
+        'levels' => 'error, warning, info, trace',
+      ),
+      // profile log route
+      array(
+        'class' => '\\SK\\Yii\\FirePHP\\ProfileLogRoute',
+        'report' => 'summary', // or "callstack"
+      ),
+    ),
+  ),
 
-        ....
+  ....
+  ```
 
 ## Standard logging
 
 Once you've got the extension setup in the config, you can use Yii's logging methods to log messages to FirePHP.
 
-    // logging an INFO message
-    Yii::log('This is an info message.', CLogger::LEVEL_INFO);
+```php
+// logging an INFO message
+Yii::log('This is an info message.', CLogger::LEVEL_INFO);
 
-    // logging a WARNING message
-    Yii::log("You didn't setup a profile, are you really a person?", CLogger::LEVEL_WARNING);
+// logging a WARNING message
+Yii::log("You didn't setup a profile, are you really a person?", CLogger::LEVEL_WARNING);
 
-    // logging with a CATEGORY (categories are displayed as "labels" in FirePHP -- just an additional info text)
-    Yii::log('Profile successfully created', CLogger::LEVEL_INFO, 'application.user.profiles');
+// logging with a CATEGORY (categories are displayed as "labels" in FirePHP -- just an additional info text)
+Yii::log('Profile successfully created', CLogger::LEVEL_INFO, 'application.user.profiles');
 
-    // tracing simple text
-    Yii::trace('Loading application.user.profiles.ninja', 'application.user.profiles');
+// tracing simple text
+Yii::trace('Loading application.user.profiles.ninja', 'application.user.profiles');
 
-    // logging an ERROR
-    Yii::log('We have successfully determined that you are not a person',
-      CLogger::LEVEL_ERROR, 'Any category/label will work');
+// logging an ERROR
+Yii::log('We have successfully determined that you are not a person',
+  CLogger::LEVEL_ERROR, 'Any category/label will work');
 
-    // If you need to log an array, you can use FirePHP's core methods
-    FB::warn(array('a' => 'b', 'c' => 'd'), 'an.array.warning');
+// If you need to log an array, you can use FirePHP's core methods
+FB::warn(array('a' => 'b', 'c' => 'd'), 'an.array.warning');
+```
 
 See more about logging [here](http://www.yiiframework.com/doc/guide/1.1/en/topics.logging).
 
@@ -99,17 +105,19 @@ See more about logging [here](http://www.yiiframework.com/doc/guide/1.1/en/topic
 
 Profiling works by simply using Yii's profiling methods.
 
-    Yii::beginProfile('a somewhat slow method');
+```php
+Yii::beginProfile('a somewhat slow method');
 
-    ...
-    // some function calls here
-    // more function calls
+...
+// some function calls here
+// more function calls
 
-    Yii::beginProfile('nested profile');
-    // you can also nest profile calls
-    Yii::endProfile('nested profile');
+Yii::beginProfile('nested profile');
+// you can also nest profile calls
+Yii::endProfile('nested profile');
 
-    Yii::endProfile('a somewhat slow method'); // end
+Yii::endProfile('a somewhat slow method'); // end
+```
 
 You can also profile SQL executions. See more about that and profiling in general
 [here](http://www.yiiframework.com/doc/guide/1.1/en/topics.logging#performance-profiling).
@@ -123,6 +131,7 @@ To try all these out, there's an example project in the `example` folder. To run
 
         $ cd example
         $ composer install
+
 
 2. Run with the PHP [built-in webserver](http://php.net/manual/en/features.commandline.webserver.php)
 
