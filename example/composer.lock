@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e74e5d5c88438a6690767098d6402561",
+    "hash": "a58839cffb54814b0381dc216aa9d9cc",
     "packages": [
         {
             "name": "firephp/firephp-core",
@@ -47,38 +47,52 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/shiki/yii-firephp.git",
-                "reference": "4fac0d4ca344c10341a7ead981541ada804532c2"
+                "reference": "f948dfd140efbbba7b03e12943d2597c87f07ceb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shiki/yii-firephp/zipball/4fac0d4ca344c10341a7ead981541ada804532c2",
-                "reference": "4fac0d4ca344c10341a7ead981541ada804532c2",
+                "url": "https://api.github.com/repos/shiki/yii-firephp/zipball/f948dfd140efbbba7b03e12943d2597c87f07ceb",
+                "reference": "f948dfd140efbbba7b03e12943d2597c87f07ceb",
                 "shasum": ""
             },
             "require": {
-                "firephp/firephp-core": ">=0.4.0"
+                "firephp/firephp-core": ">=0.4.0",
+                "php": ">=5.3.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "SK": "lib"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "BJ Basañes",
+                    "email": "bj@basanes.net",
+                    "homepage": "http://shiki.me"
+                }
             ],
             "description": "FirePHP extension for Yii Framework.",
             "homepage": "https://github.com/shiki/yii-firephp",
             "keywords": [
                 "firebug",
                 "firephp",
+                "log",
+                "logging",
+                "profile",
+                "profiling",
                 "yii"
             ],
-            "support": {
-                "source": "https://github.com/shiki/yii-firephp/tree/master",
-                "issues": "https://github.com/shiki/yii-firephp/issues"
-            },
-            "time": "2013-11-15 02:50:32"
+            "time": "2013-11-16 00:00:05"
         },
         {
             "name": "yiisoft/yii",

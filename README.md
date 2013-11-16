@@ -28,9 +28,6 @@ The only supported installation method for now is using [Composer](http://getcom
 
   ```json
   {
-    "repositories": [
-      { "type": "vcs", "url": "https://github.com/shiki/yii-firephp.git" }
-    ],
     "require": {
       "shiki/yii-firephp": "dev-master"
     }
